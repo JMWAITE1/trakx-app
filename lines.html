@@ -96,7 +96,7 @@
   .calc-link:hover { background: var(--gold-d); color: white; text-decoration: none; }
 </style>
 </head>
-<body data-page="lines" data-version="V0.33">
+<body data-page="lines" data-version="V0.34">
 <script src="assets/nav.js" defer></script>
 
 <main class="container" style="max-width:none;width:100%;padding-left:18px;padding-right:18px">
@@ -271,7 +271,7 @@ function render() {
   const sumSell   = rows.reduce((a, r) => a + r.sell_price_cents, 0);
   const sumProfit = rows.reduce((a, r) => a + r.profit_cents, 0);
   const sumHours  = rows.reduce((a, r) => a + (+r.total_hours || 0), 0);
-  const gpPct     = sumSell > 0 ? (100 * sumProfit / sumSell).toFixed(1) : '0';
+  const gpPct     = sumSell > 0 ? (100 * sumProfit / sumSell).toFixed(0) : '0';
   $('stats').innerHTML = `
     <span><strong>${rows.length}</strong> rows</span>
     <span>Hours: <strong>${sumHours.toFixed(0)}</strong></span>

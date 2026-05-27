@@ -90,7 +90,7 @@
   .zone-table .actual-cell.over { color: var(--red); }
 </style>
 </head>
-<body data-page="dashboard" data-version="V0.33">
+<body data-page="dashboard" data-version="V0.34">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -290,7 +290,7 @@ const baseOpts = {
     legend: { display: false },
     tooltip: {
       callbacks: {
-        label: c => `${c.dataset.label}: ${c.dataset.label === 'Total Hours' ? c.parsed.y.toFixed(0) + ' h' : '$' + c.parsed.y.toLocaleString()}`,
+        label: c => `${c.dataset.label}: ${c.dataset.label === 'Total Hours' ? Math.round(c.parsed.y) + ' h' : '$' + Math.round(c.parsed.y).toLocaleString()}`,
         afterBody: () => 'Click to drill into lines',
       },
     },
