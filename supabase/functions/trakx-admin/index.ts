@@ -51,6 +51,7 @@ Deno.serve(async (req) => {
           'lunch_break_minutes', 'lunch_break_threshold_hours', 'lunch_break_paid',
           'rest_break_minutes_per', 'rest_break_count', 'rest_break_paid',
           'day_start_hour', 'day_end_hour',
+          'zone_alert_within_pct',
         ]) if (p[k] !== undefined) fields[k] = p[k];
         fields.updated_at = new Date().toISOString();
         const { error } = await db.from('trakx_project_rates').update(fields).eq('project_id', p.project_id);

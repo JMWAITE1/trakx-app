@@ -90,10 +90,12 @@
   .zone-table .actual-cell.over { color: var(--red); }
 </style>
 </head>
-<body data-page="dashboard" data-version="V0.30">
+<body data-page="dashboard" data-version="V0.31">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
+
+  <div id="zone-alert-banner"></div>
 
   <div class="dash-grid">
 
@@ -185,6 +187,33 @@ const { data: zones } = await sb
   .from('v_trakx_zone_rollup')
   .select('*')
   .order('zone_name');
+
+// Zone alert threshold: warn when zone is within X% of target (default 10).
+// Read from the project_rates row for the active project.
+let alertWithinPct = 10;
+const { data: projForAlert } = await sb.from('trakx_projects').select('id').eq('slug','fonterra-m26').limit(1);
+if (projForAlert && projForAlert[0]) {
+  const { data: prArr } = await sb.from('trakx_project_rates').select('zone_alert_within_pct').eq('project_id', projForAlert[0].id).limit(1);
+  if (prArr && prArr[0] && prArr[0].zone_alert_within_pct != null) alertWithinPct = +prArr[0].zone_alert_within_pct;
+}
+const alertAtPct = 100 - alertWithinPct;
+const flagged = (zones || []).filter(z => z.revenue_target_cents > 0 && z.pct_complete >= alertAtPct);
+const banner = document.getElementById('zone-alert-banner');
+if (flagged.length) {
+  const items = flagged.map(z => {
+    const over = z.pct_complete >= 100;
+    return `<a href="lines.html?zone=${encodeURIComponent(z.zone_name)}" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:14px;background:${over?'#c64a3a':'#d4b370'};color:#fff;font-weight:600;font-size:13px;text-decoration:none;margin:2px 4px 2px 0">
+      ${z.zone_name} · ${(+z.pct_complete).toFixed(0)}%
+    </a>`;
+  }).join('');
+  banner.innerHTML = `
+    <div style="margin-bottom:14px;padding:10px 14px;background:#fff7e6;border:1px solid #d4b370;border-left:4px solid #d4b370;border-radius:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:18px">⚠️</span>
+      <strong style="color:#1e3a5f">${flagged.length} ${flagged.length===1?'zone is':'zones are'} within ${alertWithinPct}% of target</strong>
+      <div style="flex:1;min-width:200px">${items}</div>
+      <span class="text-muted text-xs">threshold set in Admin</span>
+    </div>`;
+}
 
 let totalRevenue = 0, totalCost = 0, totalGp = 0, totalTarget = 0, totalHours = 0;
 for (const z of (zones || [])) {

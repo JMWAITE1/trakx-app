@@ -75,7 +75,7 @@
   .row-add-btn:hover { background: var(--gray-200); color: var(--navy); }
 </style>
 </head>
-<body data-page="admin" data-version="V0.30">
+<body data-page="admin" data-version="V0.31">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -114,6 +114,9 @@
         <div class="field-cell"><div class="field-cell-label">Day ends at hour</div>    <input id="day_end"    type="number" min="0" max="23" class="field num"></div>
         <div class="field-cell"><div class="field-cell-label">Lunch break (min)</div>   <input id="lunch_min"  type="number" min="0" class="field num"></div>
         <div class="field-cell"><div class="field-cell-label" title="Apply lunch deduction only if shift longer than this many hours">Apply lunch if &gt; (h)</div><input id="lunch_thresh" type="number" step="0.25" class="field num"></div>
+
+        <div class="rates-section-label" title="Dashboard shows a banner when a zone gets close to its revenue target">Alerts</div>
+        <div class="field-cell" style="grid-column:1/-1"><div class="field-cell-label" title="e.g. 10 means warn when a zone has used 90%+ of its revenue target">Warn when zone is within X% of target</div><input id="zone_alert" type="number" min="0" max="100" step="1" class="field num"></div>
 
         <div style="grid-column:1/-1" class="flex items-center gap-2 mt-3">
           <button type="submit" class="btn btn-primary">Save rates</button>
@@ -213,6 +216,7 @@ async function loadAll() {
     document.getElementById('day_end').value      = pr.day_end_hour;
     document.getElementById('lunch_min').value    = pr.lunch_break_minutes;
     document.getElementById('lunch_thresh').value = pr.lunch_break_threshold_hours;
+    document.getElementById('zone_alert').value   = pr.zone_alert_within_pct ?? 10;
   }
 
   const { data: zoneData, error: zErr } = await sb.from('trakx_zones').select('*').eq('project_id', projectId).order('display_order');
@@ -260,6 +264,7 @@ document.getElementById('rates-form').addEventListener('submit', async (e) => {
       day_end_hour:               parseInt(document.getElementById('day_end').value, 10),
       lunch_break_minutes:        parseInt(document.getElementById('lunch_min').value, 10),
       lunch_break_threshold_hours:parseFloat(document.getElementById('lunch_thresh').value),
+      zone_alert_within_pct:      parseFloat(document.getElementById('zone_alert').value),
     });
     msg.textContent = '✓ Saved'; msg.className = 'text-xs text-green';
   } catch (e) {
