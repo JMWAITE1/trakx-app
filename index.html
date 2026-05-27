@@ -90,7 +90,7 @@
   .zone-table .actual-cell.over { color: var(--red); }
 </style>
 </head>
-<body data-page="dashboard" data-version="V0.15">
+<body data-page="dashboard" data-version="V0.17">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -236,12 +236,41 @@ if (!zones?.length) {
   }).join('');
 }
 
+// ── Drill-down: click or right-click a bar to drill into lines ───
+// Power-BI style. Left click = go straight to filtered Lines.
+// Right click = context menu with multiple options.
+const ctxMenu = (() => {
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;z-index:9999;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.18);padding:4px;display:none;min-width:200px;font-size:13px';
+  document.body.appendChild(el);
+  document.addEventListener('click', () => { el.style.display = 'none'; });
+  return el;
+})();
+function showCtxMenu(x, y, items) {
+  ctxMenu.innerHTML = items.map(i => i.divider
+    ? `<div style="height:1px;background:var(--border);margin:4px 0"></div>`
+    : `<a href="${i.href}" style="display:block;padding:8px 12px;color:var(--gray-700);text-decoration:none;border-radius:5px"
+         onmouseover="this.style.background='var(--gray-100)';this.style.color='var(--navy)'"
+         onmouseout="this.style.background='';this.style.color='var(--gray-700)'">
+         <span style="display:inline-block;width:18px;color:var(--blue)">${i.icon || ''}</span>${i.label}
+       </a>`).join('');
+  ctxMenu.style.left = x + 'px';
+  ctxMenu.style.top  = y + 'px';
+  ctxMenu.style.display = 'block';
+}
+
 // Shared chart options — built-in legend disabled (we render our own in the sidebar)
 const baseOpts = {
   responsive: true, maintainAspectRatio: false,
+  onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
   plugins: {
     legend: { display: false },
-    tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.dataset.label === 'Total Hours' ? c.parsed.y.toFixed(0) + ' h' : '$' + c.parsed.y.toLocaleString()}` } },
+    tooltip: {
+      callbacks: {
+        label: c => `${c.dataset.label}: ${c.dataset.label === 'Total Hours' ? c.parsed.y.toFixed(0) + ' h' : '$' + c.parsed.y.toLocaleString()}`,
+        afterBody: () => 'click → drill into lines\nright-click → more options',
+      },
+    },
   },
   scales: {
     y: { beginAtZero: true, ticks: { font: { size: 10 }, callback: v => v >= 1000 ? '$' + (v / 1000).toFixed(0) + 'k' : '$' + v } },
@@ -251,7 +280,8 @@ const baseOpts = {
 
 // GP$ by Plant — grouped bars per zone, 5 series
 const zoneLabels = (zones || []).map(z => z.zone_name);
-new Chart(document.getElementById('chart-gp-by-plant').getContext('2d'), {
+const chart1Canvas = document.getElementById('chart-gp-by-plant');
+const chart1 = new Chart(chart1Canvas.getContext('2d'), {
   type: 'bar',
   data: {
     labels: zoneLabels,
@@ -263,11 +293,38 @@ new Chart(document.getElementById('chart-gp-by-plant').getContext('2d'), {
       { label: SERIES[4].label, data: zones.map(z => z.revenue_actual_cents / 100),   backgroundColor: SERIES[4].color },
     ],
   },
-  options: baseOpts,
+  options: {
+    ...baseOpts,
+    onClick: (e, els) => {
+      if (!els.length) return;
+      const zone = zoneLabels[els[0].index];
+      location.href = `lines.html?zone=${encodeURIComponent(zone)}`;
+    },
+  },
+});
+
+// Right-click menu on the GP$ by Plant chart
+chart1Canvas.addEventListener('contextmenu', (e) => {
+  const els = chart1.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+  if (!els.length) return;
+  e.preventDefault();
+  const zone   = zoneLabels[els[0].index];
+  const series = chart1.data.datasets[els[0].datasetIndex].label;
+  showCtxMenu(e.clientX, e.clientY, [
+    { label: `View ${zone} entries`,         icon: '📋', href: `lines.html?zone=${encodeURIComponent(zone)}` },
+    { label: `View ${zone} approved only`,   icon: '✓',  href: `lines.html?zone=${encodeURIComponent(zone)}&approved=true` },
+    { label: `View ${zone} pending`,         icon: '⌛', href: `lines.html?zone=${encodeURIComponent(zone)}&approved=false` },
+    { divider: true },
+    { label: `Accounts Payable (all)`,       icon: '💸', href: `ap.html` },
+    { label: `Accounts Receivable (all)`,    icon: '💰', href: `ar.html` },
+    { divider: true },
+    { label: `Edit ${zone} (Admin)`,         icon: '⚙', href: `admin.html` },
+  ]);
 });
 
 // Total GP$ — project-wide totals
-new Chart(document.getElementById('chart-total').getContext('2d'), {
+const chart2Canvas = document.getElementById('chart-total');
+const chart2 = new Chart(chart2Canvas.getContext('2d'), {
   type: 'bar',
   data: {
     labels: ['Project Total'],
@@ -278,7 +335,28 @@ new Chart(document.getElementById('chart-total').getContext('2d'), {
       { label: SERIES[4].label, data: [totalRevenue  / 100], backgroundColor: SERIES[4].color },
     ],
   },
-  options: baseOpts,
+  options: {
+    ...baseOpts,
+    onClick: (_, els) => {
+      if (!els.length) return;
+      location.href = 'lines.html';
+    },
+  },
+});
+
+chart2Canvas.addEventListener('contextmenu', (e) => {
+  const els = chart2.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+  if (!els.length) return;
+  e.preventDefault();
+  const series = chart2.data.datasets[els[0].datasetIndex].label;
+  showCtxMenu(e.clientX, e.clientY, [
+    { label: `View all lines`,               icon: '📋', href: 'lines.html' },
+    { label: `View approved only`,           icon: '✓',  href: 'lines.html?approved=true' },
+    { label: `View pending`,                 icon: '⌛', href: 'lines.html?approved=false' },
+    { divider: true },
+    { label: `Accounts Payable`,             icon: '💸', href: 'ap.html' },
+    { label: `Accounts Receivable`,          icon: '💰', href: 'ar.html' },
+  ]);
 });
 
 const { count } = await sb.from('trakx_entries').select('id', { count: 'exact', head: true }).eq('approved', false);
