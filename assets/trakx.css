@@ -68,7 +68,7 @@ h2 { font-size: 17px; font-weight: 600; color: var(--navy); }
 }
 .trakx-brand:hover { text-decoration: none; }
 .trakx-brand .mark { color: var(--gold); }
-.trakx-context { color: rgba(255,255,255,0.65); font-size: 13px; }
+.trakx-context { color: rgba(255,255,255,0.92); font-size: 17px; font-weight: 500; letter-spacing: 0.2px; }
 .trakx-spacer { flex: 1; }
 .trakx-nav-link {
   color: rgba(255,255,255,0.78);
