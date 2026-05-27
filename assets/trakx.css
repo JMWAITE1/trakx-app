@@ -60,10 +60,8 @@ h2 { font-size: 17px; font-weight: 600; color: var(--navy); }
 .trakx-brand {
   font-weight: 800;
   font-size: 18px;
-  letter-spacing: 0.04em;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+  letter-spacing: 0;
+  display: inline-block;
   color: white;
 }
 .trakx-brand:hover { text-decoration: none; }
