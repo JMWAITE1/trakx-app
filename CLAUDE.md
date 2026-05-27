@@ -67,3 +67,4 @@ If asked to push without making other changes ("ship a version bump alone"), the
 - **RLS on trakx_entries** — the subbie smartform is anonymous (no auth). Inserts must go via an edge function that validates project/zone/person are real and active, then writes with service-role. Never expose service-role to client.
 - **Snapshot rates on insert** — the edge function must read the current `trakx_project_rates` and current `trakx_person_rates` for the person and freeze them onto the entry row. This is non-negotiable for audit.
 - **Approved → editable?** — currently no. Once approved, only an admin should be able to un-approve. (Confirm with Johnny if exceptions needed.)
+- **Auth = NOT my problem.** Richard handles authentication for PM/office/admin pages. Don't wire up Access Manager / am-* edge functions / login flows in this repo. Stub the protected pages with a "login required" placeholder; Richard will plug auth in.

@@ -10,13 +10,13 @@ Project costing system for NGL site-maintenance jobs. Rebuilds the Smartsheet Tr
 - **PMs** approve entries on a desktop page.
 - **Office staff** view AP (what we owe contractors) and AR (what to invoice the customer) reports.
 - **Admins** set up projects, zones, people, and rates.
-- **Customer** dashboard with KPIs, GP by zone, drill-down. Same vibe as the IMR dashboard.
+- **Customer** dashboard with KPIs, GP by zone, drill-down. Same vibe as the IMR dashboard. (Stage 2.)
 
 ## Architecture
 
 - Supabase Postgres backend — see `supabase/migrations/`
-- Static HTML frontend served from `apps.nationalgroupltd.com/trakx`
-- Access Manager for PM/office/admin auth (subbies don't log in)
+- Static HTML frontend (deploy TBD)
+- **Auth handled by Richard** for PM/office/admin pages — TrakX doesn't ship its own login flow. Subbies don't log in (smartform is anonymous, validated server-side by `trakx-submit` edge function).
 - Every calculation lives in **one readable SQL view** (`v_trakx_lines`). No hidden formulas.
 
 ## Pages
@@ -24,7 +24,7 @@ Project costing system for NGL site-maintenance jobs. Rebuilds the Smartsheet Tr
 | URL | Audience | What |
 |---|---|---|
 | `/trakx/submit?p=fonterra-m26` | Subbies (public) | Combined Hours/Materials/Accom smartform |
-| `/trakx/login` | Everyone else | Access Manager email-code login |
+| `/trakx/login` | Everyone else | (handled by Richard) |
 | `/trakx/p/fonterra-m26` | All logged-in | Project dashboard |
 | `/trakx/p/fonterra-m26/approve` | PM | Approval queue |
 | `/trakx/p/fonterra-m26/ap` | Office | Accounts payable |
