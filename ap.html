@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="ap" data-version="V0.28">
+<body data-page="ap" data-version="V0.29">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -80,8 +80,8 @@ function render() {
     grandTotal += total;
     return `
       <details class="card" style="padding:0;overflow:hidden" open>
-        <summary style="padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:baseline; font-weight:600; background:var(--gray-50); border-bottom:1px solid var(--border)">
-          <span>${company} <span class="text-muted text-xs" style="font-weight:400;margin-left:6px">${rows.length} entries</span></span>
+        <summary style="padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:baseline; font-weight:700; font-size:15px; background:var(--navy); color:#fff; letter-spacing:0.2px">
+          <span>${company} <span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.7);margin-left:6px">${rows.length} entries</span></span>
           <span style="font-variant-numeric:tabular-nums">${fmt(total)}</span>
         </summary>
         <div style="overflow-x:auto">
