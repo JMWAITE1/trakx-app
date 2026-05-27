@@ -14,7 +14,7 @@
 </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-<div class="version-badge fixed top-2 right-2 text-xs text-gray-400">V0.01</div>
+<div class="version-badge fixed top-2 right-2 text-xs text-gray-400">V0.02</div>
 
 <div class="max-w-md mx-auto px-4 py-6">
   <header class="mb-4">
@@ -224,12 +224,35 @@ document.getElementById('trakx-form').addEventListener('submit', async (e) => {
   }
   payload.comments = document.getElementById('comments').value;
 
-  // TODO: call trakx-submit edge function (next milestone)
-  console.log('Payload ready:', payload);
-  msg.className = 'text-center text-sm font-medium text-amber-700';
-  msg.textContent = 'Form ready ✓ — backend wiring next milestone (v0.02).';
-  btn.disabled = false;
-  btn.textContent = 'Submit';
+  try {
+    const r = await fetch(`${SUPABASE_URL}/functions/v1/trakx-submit`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    const body = await r.json();
+    if (!r.ok || !body.ok) throw new Error(body.error || `HTTP ${r.status}`);
+
+    msg.className   = 'text-center text-sm font-medium text-green-700';
+    msg.textContent = '✓ Submitted — thanks!';
+    // Reset the per-entry fields but keep name + zone + date for fast re-entry
+    document.getElementById('start_time').value = '';
+    document.getElementById('finish_time').value = '';
+    document.getElementById('finish_next_day').checked = false;
+    document.getElementById('work_description').value = '';
+    document.getElementById('materials_description').value = '';
+    document.getElementById('materials_cost').value = '';
+    document.getElementById('po_number').value = '';
+    document.getElementById('accom_nights').value = '0';
+    document.getElementById('travel_kms').value = '';
+    document.getElementById('comments').value = '';
+  } catch (e) {
+    msg.className   = 'text-center text-sm font-medium text-red-700';
+    msg.textContent = `⚠ ${e.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit';
+  }
 });
 
 load();
