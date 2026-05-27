@@ -81,6 +81,19 @@ h2 { font-size: 17px; font-weight: 600; color: var(--navy); }
 .trakx-nav-link:hover { color: white; background: rgba(255,255,255,0.08); text-decoration: none; }
 .trakx-nav-link.current { color: white; background: rgba(255,255,255,0.12); }
 .trakx-version { color: rgba(255,255,255,0.45); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+/* Collapsible group headers (AP, AR) — hide the default disclosure triangle
+   and use our own chevron span that rotates when open. */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary .chevron {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  font-size: 11px;
+  width: 10px;
+}
+details[open] > summary .chevron { transform: rotate(90deg); }
+
 .trakx-mobile-toggle { display: none; background: transparent; border: 0; color: white; font-size: 22px; }
 @media (max-width: 760px) {
   .trakx-nav-links { display: none; position: absolute; top: 100%; right: 0; background: var(--navy); padding: 8px; flex-direction: column; min-width: 180px; box-shadow: var(--shadow-md); }

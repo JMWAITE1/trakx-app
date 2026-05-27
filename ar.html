@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="ar" data-version="V0.31">
+<body data-page="ar" data-version="V0.32">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -48,7 +48,14 @@ const sb = createClient(
 );
 const fmt = c => '$' + (Math.round(c / 100)).toLocaleString();
 
-const { data: allData, error } = await sb.from('v_trakx_ar').select('*').order('date');
+// Pulling from v_trakx_line_totals (the underlying view) so we get total_hours
+// for the per-zone header summary. Equivalent to v_trakx_ar's filter.
+const { data: allData, error } = await sb
+  .from('v_trakx_line_totals')
+  .select('id, type, date, person_name, company_name, zone_name, work_description, materials_description, total_hours, labour_sell_cents, travel_sell_cents, accom_sell_cents, materials_sell_cents, equipment_sell_cents, sell_price_cents, approved')
+  .eq('approved', true)
+  .gt('sell_price_cents', 0)
+  .order('date');
 let data = allData || [];
 const $  = document.getElementById('content');
 const $g = document.getElementById('grand');
@@ -84,12 +91,17 @@ function render() {
   for (const r of rows) (groups[r.zone_name] ||= []).push(r);
   let grandTotal = 0;
   $.innerHTML = Object.entries(groups).map(([zone, rows]) => {
-    const total = rows.reduce((a, r) => a + r.sell_price_cents, 0);
+    const total    = rows.reduce((a, r) => a + r.sell_price_cents, 0);
+    const totalHrs = rows.reduce((a, r) => a + (+r.total_hours || 0), 0);
     grandTotal += total;
     return `
       <details class="card" style="padding:0;overflow:hidden" open>
-        <summary style="padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:baseline; font-weight:700; font-size:15px; background:var(--navy); color:#fff; letter-spacing:0.2px">
-          <span>${zone} <span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.7);margin-left:6px">${rows.length} lines</span></span>
+        <summary style="padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:15px; background:var(--navy); color:#fff; letter-spacing:0.2px">
+          <span style="display:flex;align-items:center;gap:8px">
+            <span class="chevron">▶</span>
+            ${zone}
+            <span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.7)">${rows.length} lines${totalHrs > 0 ? ` · ${totalHrs.toFixed(1)}h` : ''}</span>
+          </span>
           <span style="font-variant-numeric:tabular-nums">${fmt(total)}</span>
         </summary>
         <div style="overflow-x:auto">
