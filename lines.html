@@ -24,7 +24,13 @@
   .filters .field-sm { min-width: 110px; }
   .filters label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 
-  .lines-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  /* Table grows to fit content (each nowrap cell at its natural width),
+     and is at least the full width of its scroll container. That way
+     the wrapper div's overflow-x kicks in instead of the page. */
+  .lines-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 12px; }
+  /* Belt-and-braces: never let the body itself scroll horizontally
+     because of this page — keep all overflow inside the card. */
+  html, body { max-width: 100%; overflow-x: hidden; }
   .lines-table thead th {
     background: var(--navy); color: white;
     padding: 6px 8px;
@@ -79,7 +85,7 @@
   .calc-link:hover { background: var(--gold-d); color: white; text-decoration: none; }
 </style>
 </head>
-<body data-page="lines" data-version="V0.16">
+<body data-page="lines" data-version="V0.19">
 <script src="assets/nav.js" defer></script>
 
 <main class="container" style="max-width:none;width:100%;padding-left:18px;padding-right:18px">
