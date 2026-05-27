@@ -96,7 +96,7 @@
   .calc-link:hover { background: var(--gold-d); color: white; text-decoration: none; }
 </style>
 </head>
-<body data-page="lines" data-version="V0.29">
+<body data-page="lines" data-version="V0.30">
 <script src="assets/nav.js" defer></script>
 
 <main class="container" style="max-width:none;width:100%;padding-left:18px;padding-right:18px">
@@ -116,6 +116,7 @@
     <label>To <input id="f-to" type="date" class="field"></label>
     <label>Zone <select id="f-zone" class="field"><option value="">All zones</option></select></label>
     <label>Person <select id="f-person" class="field"><option value="">All people</option></select></label>
+    <label>Company <select id="f-company" class="field"><option value="">All companies</option></select></label>
     <label>Type
       <select id="f-type" class="field field-sm">
         <option value="">All</option>
@@ -213,10 +214,12 @@ async function load() {
   allLines = data || [];
 
   // Populate filter dropdowns
-  const zones   = [...new Set(allLines.map(r => r.zone_name))].sort();
-  const people  = [...new Set(allLines.map(r => r.person_name))].sort();
-  $('f-zone').innerHTML   = '<option value="">All zones</option>'   + zones.map(z => `<option ${params.get('zone')===z?'selected':''}>${z}</option>`).join('');
-  $('f-person').innerHTML = '<option value="">All people</option>' + people.map(p => `<option ${params.get('person')===p?'selected':''}>${p}</option>`).join('');
+  const zones     = [...new Set(allLines.map(r => r.zone_name))].sort();
+  const people    = [...new Set(allLines.map(r => r.person_name))].sort();
+  const companies = [...new Set(allLines.map(r => r.company_name))].sort();
+  $('f-zone').innerHTML    = '<option value="">All zones</option>'     + zones.map(z => `<option ${params.get('zone')===z?'selected':''}>${z}</option>`).join('');
+  $('f-person').innerHTML  = '<option value="">All people</option>'    + people.map(p => `<option ${params.get('person')===p?'selected':''}>${p}</option>`).join('');
+  $('f-company').innerHTML = '<option value="">All companies</option>' + companies.map(c => `<option ${params.get('company')===c?'selected':''}>${c}</option>`).join('');
   if (params.get('from'))     $('f-from').value     = params.get('from');
   if (params.get('to'))       $('f-to').value       = params.get('to');
   if (params.get('type'))     $('f-type').value     = params.get('type');
@@ -230,14 +233,16 @@ function filterRows() {
   const to   = $('f-to').value;
   const zone = $('f-zone').value;
   const pers = $('f-person').value;
+  const co   = $('f-company').value;
   const typ  = $('f-type').value;
   const app  = $('f-approved').value;
   return allLines.filter(r => {
     if (from && r.date < from) return false;
     if (to   && r.date > to)   return false;
-    if (zone && r.zone_name   !== zone) return false;
-    if (pers && r.person_name !== pers) return false;
-    if (typ  && r.type        !== typ)  return false;
+    if (zone && r.zone_name    !== zone) return false;
+    if (pers && r.person_name  !== pers) return false;
+    if (co   && r.company_name !== co)   return false;
+    if (typ  && r.type         !== typ)  return false;
     if (app !== '' && String(r.approved) !== app) return false;
     return true;
   });
@@ -467,11 +472,11 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 });
 
 // Filter handlers
-['f-from','f-to','f-zone','f-person','f-type','f-approved'].forEach(id => {
+['f-from','f-to','f-zone','f-person','f-company','f-type','f-approved'].forEach(id => {
   $(id).addEventListener('change', render);
 });
 $('f-clear').addEventListener('click', () => {
-  ['f-from','f-to','f-zone','f-person','f-type','f-approved'].forEach(id => $(id).value = '');
+  ['f-from','f-to','f-zone','f-person','f-company','f-type','f-approved'].forEach(id => $(id).value = '');
   render();
 });
 

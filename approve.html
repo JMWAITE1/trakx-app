@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="approve" data-version="V0.29">
+<body data-page="approve" data-version="V0.30">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -35,6 +35,7 @@
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">From <input id="f-from" type="date" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto"></label>
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">To <input id="f-to" type="date" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto"></label>
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Contractor <select id="f-company" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto;min-width:140px"><option value="">All</option></select></label>
+    <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Person <select id="f-person" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto;min-width:140px"><option value="">All</option></select></label>
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Zone <select id="f-zone" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto;min-width:130px"><option value="">All</option></select></label>
     <button id="f-clear" class="btn btn-ghost btn-sm" style="margin-left:auto">Clear</button>
   </div>
@@ -65,7 +66,9 @@ async function load() {
   // Populate filter dropdowns
   const cos = [...new Set(allRows.map(r => r.company_name))].sort();
   const zns = [...new Set(allRows.map(r => r.zone_name))].sort();
+  const pps = [...new Set(allRows.map(r => r.person_name))].sort();
   document.getElementById('f-company').innerHTML = '<option value="">All contractors</option>' + cos.map(c => `<option>${c}</option>`).join('');
+  document.getElementById('f-person').innerHTML  = '<option value="">All people</option>'      + pps.map(p => `<option>${p}</option>`).join('');
   document.getElementById('f-zone').innerHTML    = '<option value="">All zones</option>'       + zns.map(z => `<option>${z}</option>`).join('');
   render();
 }
@@ -74,12 +77,14 @@ function filtered() {
   const from = document.getElementById('f-from').value;
   const to   = document.getElementById('f-to').value;
   const co   = document.getElementById('f-company').value;
+  const pers = document.getElementById('f-person').value;
   const zone = document.getElementById('f-zone').value;
   return allRows.filter(r => {
     if (from && r.date < from) return false;
     if (to   && r.date > to)   return false;
-    if (co   && r.company_name !== co) return false;
-    if (zone && r.zone_name !== zone) return false;
+    if (co   && r.company_name !== co)   return false;
+    if (pers && r.person_name  !== pers) return false;
+    if (zone && r.zone_name    !== zone) return false;
     return true;
   });
 }
@@ -166,9 +171,9 @@ document.getElementById('approve-all').addEventListener('click', () => {
   approve(rows.map(r => r.id));
 });
 
-['f-from','f-to','f-company','f-zone'].forEach(id => document.getElementById(id).addEventListener('change', render));
+['f-from','f-to','f-company','f-person','f-zone'].forEach(id => document.getElementById(id).addEventListener('change', render));
 document.getElementById('f-clear').addEventListener('click', () => {
-  ['f-from','f-to','f-company','f-zone'].forEach(id => document.getElementById(id).value = '');
+  ['f-from','f-to','f-company','f-person','f-zone'].forEach(id => document.getElementById(id).value = '');
   render();
 });
 

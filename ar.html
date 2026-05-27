@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="ar" data-version="V0.29">
+<body data-page="ar" data-version="V0.30">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -32,6 +32,7 @@
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">To <input id="f-to" type="date" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto"></label>
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Zone <select id="f-zone" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto;min-width:140px"><option value="">All</option></select></label>
     <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Contractor <select id="f-company" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto;min-width:160px"><option value="">All</option></select></label>
+    <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Person <select id="f-person" class="field" style="min-height:30px;padding:4px 8px;font-size:13px;width:auto;min-width:160px"><option value="">All</option></select></label>
     <button id="f-clear" class="btn btn-ghost btn-sm" style="margin-left:auto">Clear</button>
   </div>
 
@@ -54,19 +55,23 @@ const $g = document.getElementById('grand');
 
 const zones = [...new Set(data.map(r => r.zone_name))].sort();
 const companies = [...new Set(data.map(r => r.company_name))].sort();
+const people = [...new Set(data.map(r => r.person_name))].sort();
 document.getElementById('f-zone').innerHTML = '<option value="">All zones</option>' + zones.map(z => `<option>${z}</option>`).join('');
 document.getElementById('f-company').innerHTML = '<option value="">All contractors</option>' + companies.map(c => `<option>${c}</option>`).join('');
+document.getElementById('f-person').innerHTML = '<option value="">All people</option>' + people.map(p => `<option>${p}</option>`).join('');
 
 function filtered() {
   const from = document.getElementById('f-from').value;
   const to = document.getElementById('f-to').value;
   const zone = document.getElementById('f-zone').value;
   const co = document.getElementById('f-company').value;
+  const pers = document.getElementById('f-person').value;
   return data.filter(r => {
     if (from && r.date < from) return false;
     if (to   && r.date > to)   return false;
-    if (zone && r.zone_name !== zone) return false;
-    if (co   && r.company_name !== co) return false;
+    if (zone && r.zone_name    !== zone) return false;
+    if (co   && r.company_name !== co)   return false;
+    if (pers && r.person_name  !== pers) return false;
     return true;
   });
 }
@@ -117,13 +122,13 @@ function render() {
       </details>
     `;
   }).join('');
-  const anyFilter = ['f-from','f-to','f-zone','f-company'].some(id => document.getElementById(id).value);
+  const anyFilter = ['f-from','f-to','f-zone','f-company','f-person'].some(id => document.getElementById(id).value);
   $g.innerHTML = `<span class="font-semibold text-lg">Total to invoice${anyFilter ? ' (filtered)' : ''}</span><span class="text-lg font-bold" style="font-variant-numeric:tabular-nums">${fmt(grandTotal)}</span>`;
 }
 
-['f-from','f-to','f-zone','f-company'].forEach(id => document.getElementById(id).addEventListener('change', render));
+['f-from','f-to','f-zone','f-company','f-person'].forEach(id => document.getElementById(id).addEventListener('change', render));
 document.getElementById('f-clear').addEventListener('click', () => {
-  ['f-from','f-to','f-zone','f-company'].forEach(id => document.getElementById(id).value = '');
+  ['f-from','f-to','f-zone','f-company','f-person'].forEach(id => document.getElementById(id).value = '');
   render();
 });
 
