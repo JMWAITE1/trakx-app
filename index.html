@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrakX — Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div class="version-badge fixed top-2 right-2 text-xs text-gray-400">V0.01</div>
+
+<div class="max-w-6xl mx-auto px-6 py-8">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">TrakX</h1>
+    <p class="text-gray-500">Project costing for NGL site-maintenance jobs</p>
+  </header>
+
+  <div class="grid md:grid-cols-2 gap-4">
+
+    <a href="submit.html?p=fonterra-m26"
+       class="block bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+      <div class="text-sm text-gray-500 mb-1">Public form</div>
+      <div class="text-lg font-semibold text-gray-900">Submit hours / materials / accom</div>
+      <div class="text-sm text-blue-700 mt-2">→ submit.html?p=fonterra-m26</div>
+    </a>
+
+    <a href="admin.html"
+       class="block bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+      <div class="text-sm text-gray-500 mb-1">Admin</div>
+      <div class="text-lg font-semibold text-gray-900">Projects, zones, people, rates</div>
+      <div class="text-sm text-blue-700 mt-2">→ admin.html</div>
+    </a>
+
+  </div>
+
+  <section class="mt-12 bg-white rounded-xl p-6 shadow-sm" id="zones-card">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Fonterra Maungaturoto 26 — Zones</h2>
+    <div id="zones-content" class="text-gray-500">Loading…</div>
+  </section>
+
+  <p class="text-xs text-gray-400 mt-12">Coming next: project dashboard with KPI tiles, GP-by-zone chart, drill-down line items, AP/AR reports.</p>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient(
+  'https://uhodycdbkwocvptiffks.supabase.co',
+  'sb_publishable_TKWfAttrdywsm1BOMUMNlw_FjMolZO5'
+);
+
+const { data: zones } = await sb
+  .from('trakx_zones')
+  .select('name, revenue_target_cents, netsuite_project_id')
+  .eq('project_id', (await sb.from('trakx_projects').select('id').eq('slug','fonterra-m26').single()).data?.id)
+  .order('display_order');
+
+const $ = document.getElementById('zones-content');
+if (zones && zones.length) {
+  $.innerHTML = `<table class="w-full text-sm">
+    <thead class="text-left text-gray-500 border-b">
+      <tr><th class="py-2">Zone</th><th>NetSuite</th><th class="text-right">PO target</th></tr>
+    </thead>
+    <tbody>` + zones.map(z => `
+      <tr class="border-b last:border-0">
+        <td class="py-2 font-medium text-gray-900">${z.name}</td>
+        <td class="text-gray-600">${z.netsuite_project_id || '—'}</td>
+        <td class="text-right">$${(z.revenue_target_cents / 100).toLocaleString()}</td>
+      </tr>
+    `).join('') + `</tbody></table>`;
+} else {
+  $.textContent = 'No zones found. Run the seed migration.';
+}
+</script>
+</body>
+</html>
