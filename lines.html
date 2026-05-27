@@ -61,6 +61,17 @@
   .lines-table .approved { color: var(--green); font-weight: 700; }
   .lines-table .pending  { color: var(--amber); font-weight: 700; }
 
+  /* Contextual column visibility — when the user filters by a specific
+     type (Hours / Materials / Accom), hide columns that aren't relevant. */
+  body[data-type-filter="hours"]     .col-mat,
+  body[data-type-filter="materials"] .col-hours,
+  body[data-type-filter="materials"] .col-labsell,
+  body[data-type-filter="materials"] .col-labcost,
+  body[data-type-filter="accom"]     .col-hours,
+  body[data-type-filter="accom"]     .col-labsell,
+  body[data-type-filter="accom"]     .col-labcost,
+  body[data-type-filter="accom"]     .col-mat { display: none; }
+
   .calc-detail {
     background: #fff8e1; border-top: 2px solid var(--gold);
     padding: 12px 16px; font-size: 12px;
@@ -85,7 +96,7 @@
   .calc-link:hover { background: var(--gold-d); color: white; text-decoration: none; }
 </style>
 </head>
-<body data-page="lines" data-version="V0.26">
+<body data-page="lines" data-version="V0.27">
 <script src="assets/nav.js" defer></script>
 
 <main class="container" style="max-width:none;width:100%;padding-left:18px;padding-right:18px">
@@ -135,18 +146,18 @@
           <th data-sort="person_name">Person</th>
           <th data-sort="company_name">Company</th>
           <th data-sort="zone_name">Zone</th>
-          <th>Start</th>
-          <th>Finish</th>
-          <th class="num" data-sort="gross_hours">Gross h</th>
-          <th class="num" data-sort="lunch_deduction_hours">Lunch</th>
-          <th class="num" data-sort="day_hours">Day h</th>
-          <th class="num" data-sort="night_hours">Night h</th>
-          <th class="num" data-sort="total_hours">Paid h</th>
-          <th class="num" data-sort="labour_cost_cents">Lab cost</th>
+          <th class="col-hours">Start</th>
+          <th class="col-hours">Finish</th>
+          <th class="num col-hours" data-sort="gross_hours">Gross h</th>
+          <th class="num col-hours" data-sort="lunch_deduction_hours">Lunch</th>
+          <th class="num col-hours" data-sort="day_hours">Day h</th>
+          <th class="num col-hours" data-sort="night_hours">Night h</th>
+          <th class="num col-hours" data-sort="total_hours">Paid h</th>
+          <th class="num col-labcost" data-sort="labour_cost_cents">Lab cost</th>
           <th class="num" data-sort="travel_cost_cents">Travel cost</th>
-          <th class="num" data-sort="materials_cost_cents">Mat cost</th>
+          <th class="num col-mat" data-sort="materials_cost_cents">Mat cost</th>
           <th class="num" data-sort="total_cost_cents">Total cost</th>
-          <th class="num" data-sort="labour_sell_cents">Lab sell</th>
+          <th class="num col-labsell" data-sort="labour_sell_cents">Lab sell</th>
           <th class="num" data-sort="sell_price_cents">Sell</th>
           <th class="num" data-sort="profit_cents">Profit</th>
           <th>Status</th>
@@ -244,6 +255,10 @@ function sortRows(rows) {
 }
 
 function render() {
+  // Drive contextual column visibility off the type filter — CSS does
+  // the actual hiding via body[data-type-filter="..."] selectors.
+  document.body.dataset.typeFilter = $('f-type').value || '';
+
   const rows = sortRows(filterRows());
 
   // Stats bar
@@ -291,18 +306,18 @@ function render() {
         <td>${r.person_name}</td>
         <td>${r.company_name}</td>
         <td>${r.zone_name}</td>
-        <td>${r.start_time ? r.start_time.slice(0,5) : ''}</td>
-        <td>${r.finish_time ? r.finish_time.slice(0,5) + (r.finish_next_day ? ' +1' : '') : ''}</td>
-        <td class="num">${numh(r.gross_hours)}</td>
-        <td class="num">${r.lunch_deduction_hours > 0 ? '-' + numh(r.lunch_deduction_hours) : ''}</td>
-        <td class="num">${numh(r.day_hours)}</td>
-        <td class="num">${numh(r.night_hours)}</td>
-        <td class="num">${numh(r.total_hours)}</td>
-        <td class="num">${r.labour_cost_cents ? fmt(r.labour_cost_cents) : ''}</td>
+        <td class="col-hours">${r.start_time ? r.start_time.slice(0,5) : ''}</td>
+        <td class="col-hours">${r.finish_time ? r.finish_time.slice(0,5) + (r.finish_next_day ? ' +1' : '') : ''}</td>
+        <td class="num col-hours">${numh(r.gross_hours)}</td>
+        <td class="num col-hours">${r.lunch_deduction_hours > 0 ? '-' + numh(r.lunch_deduction_hours) : ''}</td>
+        <td class="num col-hours">${numh(r.day_hours)}</td>
+        <td class="num col-hours">${numh(r.night_hours)}</td>
+        <td class="num col-hours">${numh(r.total_hours)}</td>
+        <td class="num col-labcost">${r.labour_cost_cents ? fmt(r.labour_cost_cents) : ''}</td>
         <td class="num">${r.travel_cost_cents ? fmt(r.travel_cost_cents) : ''}</td>
-        <td class="num">${r.materials_cost_cents ? fmt(r.materials_cost_cents) : ''}</td>
+        <td class="num col-mat">${r.materials_cost_cents ? fmt(r.materials_cost_cents) : ''}</td>
         <td class="num">${fmt(r.total_cost_cents)}</td>
-        <td class="num">${r.labour_sell_cents ? fmt(r.labour_sell_cents) : ''}</td>
+        <td class="num col-labsell">${r.labour_sell_cents ? fmt(r.labour_sell_cents) : ''}</td>
         <td class="num">${fmt(r.sell_price_cents)}</td>
         <td class="num">${fmtP(r.profit_cents)}</td>
         <td>${statusBadge}</td>
