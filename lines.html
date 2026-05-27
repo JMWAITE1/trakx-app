@@ -85,7 +85,7 @@
   .calc-link:hover { background: var(--gold-d); color: white; text-decoration: none; }
 </style>
 </head>
-<body data-page="lines" data-version="V0.22">
+<body data-page="lines" data-version="V0.23">
 <script src="assets/nav.js" defer></script>
 
 <main class="container" style="max-width:none;width:100%;padding-left:18px;padding-right:18px">
@@ -186,10 +186,11 @@ const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 async function load() {
   // Project + rates so calc breakdown can show the live constants used
-  const { data: project } = await sb.from('trakx_projects').select('id').eq('slug','fonterra-m26').single();
+  const { data: projects } = await sb.from('trakx_projects').select('id').eq('slug','fonterra-m26').limit(1);
+  const project = projects && projects[0];
   if (project) {
-    const { data: pr } = await sb.from('trakx_project_rates').select('*').eq('project_id', project.id).single();
-    allRates = pr || {};
+    const { data: prArr } = await sb.from('trakx_project_rates').select('*').eq('project_id', project.id).limit(1);
+    allRates = (prArr && prArr[0]) || {};
   }
 
   // Pull all lines

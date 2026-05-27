@@ -25,33 +25,37 @@
   .rates-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px 12px;
-    font-size: 12px;
+    gap: 10px 12px;
   }
-  .rates-grid label { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--gray-700); }
-  .rates-grid label span:first-child { font-weight: 500; }
+  .rates-grid .field-cell { display: flex; flex-direction: column; gap: 3px; }
+  .rates-grid .field-cell-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-700);
+    line-height: 1.2;
+  }
   .rates-grid input.field {
-    min-height: 28px;
-    padding: 4px 8px;
-    font-size: 13px;
-    width: 80px;
+    width: 100%;
+    min-height: 32px;
+    padding: 4px 10px;
+    font-size: 14px;
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
 
   .rates-section-label {
     grid-column: 1 / -1;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-    margin-top: 4px;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    margin-top: 8px;
     margin-bottom: 2px;
-    padding-top: 6px;
-    border-top: 1px dashed var(--line);
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--blue);
   }
-  .rates-section-label:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+  .rates-section-label:first-child { margin-top: 0; }
 
   .compact-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .compact-table th { background: var(--gray-50); padding: 4px 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -67,7 +71,7 @@
   .row-add-btn:hover { background: var(--gray-200); color: var(--navy); }
 </style>
 </head>
-<body data-page="admin" data-version="V0.22">
+<body data-page="admin" data-version="V0.23">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -84,32 +88,31 @@
     <section class="card card-tight">
       <div class="card-header">Project rates</div>
       <form id="rates-form" class="rates-grid">
-        <div class="rates-section-label">Labour ($/h)</div>
-        <label><span>Day sell</span> <input id="day_sell" type="number" step="0.01" class="field num"></label>
-        <label><span>Night sell</span> <input id="night_sell" type="number" step="0.01" class="field num"></label>
-        <label><span>Bonus %</span> <input id="bonus_pct" type="number" step="0.01" class="field num"></label>
-        <label><span></span><span></span></label>
+        <div class="rates-section-label">Labour ($/h, charged to customer)</div>
+        <div class="field-cell"><div class="field-cell-label">Day rate $/h</div>     <input id="day_sell"   type="number" step="0.01" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Night rate $/h</div>   <input id="night_sell" type="number" step="0.01" class="field num"></div>
+        <div class="field-cell" style="grid-column:1/-1"><div class="field-cell-label">Bonus % (added to every hour of subbie pay)</div><input id="bonus_pct" type="number" step="0.01" class="field num"></div>
 
         <div class="rates-section-label">Travel ($/km)</div>
-        <label><span>Cost</span> <input id="travel_cost" type="number" step="0.01" class="field num"></label>
-        <label><span>Sell</span> <input id="travel_sell" type="number" step="0.01" class="field num"></label>
+        <div class="field-cell"><div class="field-cell-label">Cost — what we pay subbie</div>  <input id="travel_cost" type="number" step="0.01" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Sell — what we charge</div>     <input id="travel_sell" type="number" step="0.01" class="field num"></div>
 
         <div class="rates-section-label">Accommodation ($/night)</div>
-        <label><span>Cost</span> <input id="accom_cost" type="number" step="0.01" class="field num"></label>
-        <label><span>Sell</span> <input id="accom_sell" type="number" step="0.01" class="field num"></label>
+        <div class="field-cell"><div class="field-cell-label">Cost — what we pay</div>     <input id="accom_cost" type="number" step="0.01" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Sell — what we charge</div>  <input id="accom_sell" type="number" step="0.01" class="field num"></div>
 
-        <div class="rates-section-label">Markup %</div>
-        <label><span>Materials</span> <input id="mat_markup" type="number" step="0.01" class="field num"></label>
-        <label><span>Equipment</span> <input id="eq_markup" type="number" step="0.01" class="field num"></label>
+        <div class="rates-section-label">Markup % (cost &times; 1+markup)</div>
+        <div class="field-cell"><div class="field-cell-label">Materials</div>  <input id="mat_markup" type="number" step="0.01" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Equipment</div>  <input id="eq_markup" type="number" step="0.01" class="field num"></div>
 
-        <div class="rates-section-label">Hours & breaks</div>
-        <label><span>Day starts (h)</span> <input id="day_start" type="number" min="0" max="23" class="field num"></label>
-        <label><span>Day ends (h)</span> <input id="day_end" type="number" min="0" max="23" class="field num"></label>
-        <label><span>Lunch (min)</span> <input id="lunch_min" type="number" min="0" class="field num"></label>
-        <label><span>Lunch &gt; (h)</span> <input id="lunch_thresh" type="number" step="0.25" class="field num"></label>
+        <div class="rates-section-label">Day window &amp; lunch</div>
+        <div class="field-cell"><div class="field-cell-label">Day starts at hour</div>  <input id="day_start"  type="number" min="0" max="23" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Day ends at hour</div>    <input id="day_end"    type="number" min="0" max="23" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Lunch break (min)</div>   <input id="lunch_min"  type="number" min="0" class="field num"></div>
+        <div class="field-cell"><div class="field-cell-label">Apply lunch if &gt; (h)</div><input id="lunch_thresh" type="number" step="0.25" class="field num"></div>
 
-        <div style="grid-column:1/-1" class="flex items-center gap-2 mt-2">
-          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        <div style="grid-column:1/-1" class="flex items-center gap-2 mt-3">
+          <button type="submit" class="btn btn-primary">Save rates</button>
           <span id="rates-msg" class="text-xs"></span>
         </div>
       </form>
@@ -174,20 +177,24 @@ function showError(target, label, err) {
 }
 
 async function loadAll() {
-  const { data: project, error: projErr } = await sb.from('trakx_projects').select('id').eq('slug','fonterra-m26').single();
-  if (projErr || !project) {
-    showError('zones-rows', 'Could not load project (RLS or missing)', projErr);
+  // Array+first instead of .single() — .single() is too strict and throws
+  // "Cannot coerce to single JSON object" on transient hiccups.
+  const { data: projects, error: projErr } = await sb.from('trakx_projects').select('id,display_name,status').eq('slug','fonterra-m26').limit(1);
+  if (projErr || !projects || !projects.length) {
+    const detail = projErr?.message || 'project row not visible (RLS?)';
+    showError('zones-rows', `Could not load project: ${detail}`, projErr);
     showError('people-rows', 'Could not load project', projErr);
     showError('companies-rows', 'Could not load project', projErr);
     return;
   }
-  projectId = project.id;
+  projectId = projects[0].id;
 
-  const { data: pr, error: prErr } = await sb.from('trakx_project_rates').select('*').eq('project_id', projectId).single();
+  const { data: prArr, error: prErr } = await sb.from('trakx_project_rates').select('*').eq('project_id', projectId).limit(1);
   if (prErr) {
     document.getElementById('rates-msg').textContent = '⚠ rates load: ' + prErr.message;
     document.getElementById('rates-msg').className = 'text-xs text-red';
   }
+  const pr = prArr && prArr[0];
   if (pr) {
     document.getElementById('day_sell').value     = c2d(pr.day_sell_rate_cents);
     document.getElementById('night_sell').value   = c2d(pr.night_sell_rate_cents);
@@ -350,8 +357,8 @@ function renderPeople() {
       <thead><tr>
         <th>Name</th><th>Company</th>
         <th class="num">Day $/h</th><th class="num">Night $/h</th>
-        <th class="text-center">On</th>
-        <th></th><th></th>
+        <th class="text-center">On project</th>
+        <th></th>
       </tr></thead>
       <tbody>
         ${people.map(p => `
@@ -366,7 +373,6 @@ function renderPeople() {
             <td><input class="field num" type="number" step="0.01" value="${p.latest_rate ? c2d(p.latest_rate.night_pay_rate_cents) : ''}" data-f="night_pay" style="width:64px"></td>
             <td class="text-center"><label class="check"><input type="checkbox" ${p.assigned ? 'checked' : ''} data-f="assigned"></label></td>
             <td><button class="btn btn-primary" data-act="save">Save</button></td>
-            <td><button class="btn btn-secondary" data-act="rate" title="Push rate as effective-today">+R</button></td>
           </tr>
         `).join('')}
       </tbody>
@@ -379,14 +385,7 @@ async function personAction(e) {
   const id  = row.dataset.id;
   const get = f => row.querySelector(`[data-f="${f}"]`);
   try {
-    if (e.target.dataset.act === 'rate') {
-      await callAdmin({
-        op: 'set_person_rate', person_id: id,
-        effective_from: new Date().toISOString().slice(0,10),
-        day_pay_rate_cents:   d2c(get('day_pay').value),
-        night_pay_rate_cents: d2c(get('night_pay').value),
-      });
-    } else {
+    {
       const res = await callAdmin({
         op: 'upsert_person',
         person_id: id.startsWith('new-') ? null : id,
