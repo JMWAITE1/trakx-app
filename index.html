@@ -37,7 +37,7 @@
     box-shadow: var(--shadow-sm);
   }
   .kpi-row .kpi-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-  .kpi-row .kpi-value { font-size: 20px; font-weight: 700; color: var(--navy); margin-top: 4px; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .kpi-row .kpi-value { font-size: 20px; font-weight: 600; color: var(--ink); margin-top: 4px; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
   .kpi-row .kpi-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
   .chart-card {
@@ -51,11 +51,11 @@
     flex-direction: column;
   }
   .chart-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--navy);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-align: center;
     padding-bottom: 8px;
     margin-bottom: 10px;
@@ -71,7 +71,7 @@
     padding: 12px 14px;
     box-shadow: var(--shadow-sm);
   }
-  .side-title { font-size: 11px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.06em; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .side-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
   .ns-row { font-size: 12px; color: var(--muted); padding: 4px 0; display: block; }
   .ns-row strong { color: var(--navy); margin-right: 6px; font-variant-numeric: tabular-nums; }
 
@@ -81,7 +81,7 @@
 
   .zone-table-card { background: white; border-radius: var(--r-lg); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; }
   .zone-table { width: 100%; border-collapse: collapse; }
-  .zone-table th { background: var(--gray-50); padding: 8px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--navy); text-align: left; border-bottom: 1px solid var(--border); }
+  .zone-table th { background: var(--gray-50); padding: 8px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); text-align: left; border-bottom: 1px solid var(--border); }
   .zone-table th.num, .zone-table td.num { text-align: right; }
   .zone-table td { padding: 9px 12px; border-bottom: 1px solid var(--gray-100); font-size: 13px; font-variant-numeric: tabular-nums; }
   .zone-table tr:last-child td { border-bottom: none; }
@@ -90,7 +90,7 @@
   .zone-table .actual-cell.over { color: var(--red); }
 </style>
 </head>
-<body data-page="dashboard" data-version="V0.35">
+<body data-page="dashboard" data-version="V0.36">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -130,7 +130,7 @@
         <div class="side-title">Submit</div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <a href="submit.html?p=fonterra-m26" target="_blank" class="btn btn-secondary btn-sm" style="justify-content:flex-start">+ New entry</a>
-          <button id="copy-subbie-link" class="btn btn-secondary btn-sm" style="justify-content:flex-start" title="Copy public submit link">📋 Copy subbie link</button>
+          <button id="copy-subbie-link" class="btn btn-secondary btn-sm" style="justify-content:flex-start" title="Copy public submit link"><svg class="icon-sm" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"/></svg> Copy subbie link</button>
           <span id="submit-hint" class="text-muted" style="font-size:11px;margin-top:2px;min-height:14px"></span>
         </div>
       </div>
@@ -202,14 +202,14 @@ const banner = document.getElementById('zone-alert-banner');
 if (flagged.length) {
   const items = flagged.map(z => {
     const over = z.pct_complete >= 100;
-    return `<a href="lines.html?zone=${encodeURIComponent(z.zone_name)}" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:14px;background:${over?'#c64a3a':'#d4b370'};color:#fff;font-weight:600;font-size:13px;text-decoration:none;margin:2px 4px 2px 0">
+    return `<a href="lines.html?zone=${encodeURIComponent(z.zone_name)}" style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:${over?'var(--red)':'var(--amber)'};color:#fff;font-weight:600;font-size:12px;text-decoration:none;margin:2px 4px 2px 0">
       ${z.zone_name} · ${(+z.pct_complete).toFixed(0)}%
     </a>`;
   }).join('');
   banner.innerHTML = `
-    <div style="margin-bottom:14px;padding:10px 14px;background:#fff7e6;border:1px solid #d4b370;border-left:4px solid #d4b370;border-radius:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <span style="font-size:18px">⚠️</span>
-      <strong style="color:#1e3a5f">${flagged.length} ${flagged.length===1?'zone is':'zones are'} within ${alertWithinPct}% of target</strong>
+    <div style="margin-bottom:14px;padding:10px 14px;background:var(--amber-bg);border:1px solid #fcd34d;border-left:3px solid var(--amber);border-radius:var(--r-lg);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <svg class="icon-lg" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--amber)" fill="none" style="flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+      <strong style="color:var(--ink)">${flagged.length} ${flagged.length===1?'zone is':'zones are'} within ${alertWithinPct}% of target</strong>
       <div style="flex:1;min-width:200px">${items}</div>
       <span class="text-muted text-xs">threshold set in Admin</span>
     </div>`;
@@ -374,8 +374,8 @@ const { count } = await sb.from('trakx_entries').select('id', { count: 'exact', 
 if (count && count > 0) {
   const b = document.getElementById('pending-banner');
   b.innerHTML = `
-    <a href="approve.html" class="card flex items-center gap-3" style="background:var(--amber-bg);border-left:4px solid var(--amber);text-decoration:none">
-      <span style="font-size:22px">⚠</span>
+    <a href="approve.html" class="card flex items-center gap-3" style="background:var(--amber-bg);border-left:3px solid var(--amber);text-decoration:none">
+      <svg class="icon-lg" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--amber)" fill="none" style="flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
       <div>
         <div class="font-semibold" style="color:var(--amber)">${count} pending approval${count > 1 ? 's' : ''}</div>
         <div class="text-xs text-muted">Click to review</div>

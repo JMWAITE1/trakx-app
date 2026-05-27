@@ -2,27 +2,30 @@
    Palette mirrors NGL brand (navy + gold + cool greys). */
 
 :root {
-  /* Aligned with the NGL family — qa-trial + Project Tracker share the
-     same palette. IMR uses a Power BI variant (#1B2D71 + sky) which is
-     intentionally different. */
+  /* Pro-look palette: muted slate/forest/brick/mustard tones for an
+     industrial-software feel (Linear / Procore / Foresite), not bright
+     marketing colours. Navy stays — it's our identity. */
   --navy:#1e3a5f; --navy-h:#16304f;
-  --blue:#1e56a0; --blue-h:#174a8a;
-  --accent:#1e56a0;            /* alias for --blue, matches Project Tracker */
+  --blue:#2c5282; --blue-h:#22467a;     /* desaturated slate, not bright */
+  --accent:#2c5282;
   --gold:#c8a96a; --gold-d:#a48a52;
-  --green:#059669; --green-bg:#d1fae5;
-  --red:#dc2626;   --red-bg:#fee2e2;
-  --amber:#d97706; --amber-bg:#fef3c7;
+  --green:#15803d; --green-bg:#dcfce7;  /* forest */
+  --red:#b91c1c;   --red-bg:#fee2e2;    /* brick */
+  --amber:#b45309; --amber-bg:#fef3c7;  /* mustard */
   --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb;
   --gray-300:#d1d5db; --gray-500:#6b7280; --gray-600:#4b5563;
-  --gray-700:#374151; --gray-900:#1f2937;        /* matches --ink in family */
-  --ink:#1f2937;               /* alias used by family */
-  --muted:#6b7280;             /* alias used by family */
-  --line:#e2e8f0;              /* alias used by family */
+  --gray-700:#374151; --gray-900:#1f2937;
+  --ink:#1f2937;
+  --muted:#6b7280;
+  --line:#e2e8f0;
   --bg:#eef2f7; --border:#e2e8f0;
+  /* Softer, less marketing-y shadows */
   --shadow-sm:0 1px 2px rgba(15,23,42,.05);
-  --shadow:0 1px 3px rgba(15,23,42,.08);
-  --shadow-md:0 6px 18px rgba(15,23,42,.08);
-  --r:8px; --r-lg:12px;
+  --shadow:0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.06);
+  --shadow-md:0 8px 24px rgba(15,23,42,.12);
+  --shadow-lg:0 8px 24px rgba(15,23,42,.12);
+  /* Tighter radii for an industrial-tool feel */
+  --r:6px; --r-lg:8px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,21 +43,21 @@ button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 a { color: var(--blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
-/* Match the IMR / Project Tracker h1 size + letter-spacing — gives it
-   the same presence as the rest of the NGL app family. */
-h1 { font-size: 26px; font-weight: 700; color: var(--navy); letter-spacing: 0.3px; line-height: 1.2; }
-h2 { font-size: 17px; font-weight: 600; color: var(--navy); }
+/* Quieter hierarchy: smaller hero headings, leaning on color + weight (not size)
+   to separate emphasis. Negative tracking keeps it tight and pro. */
+h1 { font-size: 20px; font-weight: 600; color: var(--navy); letter-spacing: -0.01em; line-height: 1.25; }
+h2 { font-size: 15px; font-weight: 600; color: var(--navy); letter-spacing: -0.005em; }
 
 /* ── Header / brand ──────────────────────────────────────────────── */
 .trakx-header {
-  background: linear-gradient(180deg, #22436c 0%, #1a3252 100%);
+  background: var(--navy);
   color: white;
   padding: 12px 18px;
   display: flex;
   align-items: center;
   gap: 14px;
-  border-bottom: 1px solid var(--gold);
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  border-bottom: 1px solid rgba(200,169,106,0.55);
+  box-shadow: 0 1px 2px rgba(15,23,42,.08);
   position: sticky; top: 0; z-index: 50;
 }
 .trakx-brand {
@@ -116,11 +119,11 @@ details[open] > summary .chevron { transform: rotate(90deg); }
 }
 .card-tight { padding: 12px 14px; }
 .card-header {
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 12px;
   color: var(--navy);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   margin-bottom: 14px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
@@ -154,13 +157,13 @@ details[open] > summary .chevron { transform: rotate(90deg); }
 .btn-blue     { background: var(--blue); color: white; }
 .btn-blue:hover     { background: var(--blue-h); text-decoration: none; }
 .btn-success  { background: var(--green); color: white; }
-.btn-success:hover  { background: #047857; text-decoration: none; }
+.btn-success:hover  { background: #166534; text-decoration: none; }
 .btn-secondary{ background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--border); }
 .btn-secondary:hover{ background: var(--gray-200); text-decoration: none; }
 .btn-danger   { background: var(--red-bg); color: var(--red); border: 1px solid #fecaca; }
 .btn-danger:hover   { background: #fecaca; text-decoration: none; }
 .btn-ghost    { background: transparent; color: var(--blue); }
-.btn-ghost:hover    { background: rgba(30,86,160,0.08); text-decoration: none; }
+.btn-ghost:hover    { background: rgba(44,82,130,0.08); text-decoration: none; }
 .btn-block    { width: 100%; }
 .btn-lg       { padding: 14px 22px; font-size: 16px; min-height: 50px; }
 .btn-sm       { padding: 6px 10px; min-height: 32px; font-size: 13px; }
@@ -180,7 +183,7 @@ details[open] > summary .chevron { transform: rotate(90deg); }
 .field:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(30,86,160,0.15);
+  box-shadow: 0 0 0 3px rgba(44,82,130,0.18);
 }
 .field-sm { font-size: 14px; min-height: 36px; padding: 8px 10px; }
 .label {
@@ -271,17 +274,18 @@ details[open] > summary .chevron { transform: rotate(90deg); }
 .kpi-label {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--navy);
-  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 600;
 }
 .kpi-value {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--gray-900);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
   margin-top: 4px;
-  line-height: 1.1;
+  line-height: 1.15;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 .kpi-sub { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
 .kpi.accent-blue   { border-top: 3px solid var(--blue); }
@@ -387,6 +391,13 @@ details[open] > summary .chevron { transform: rotate(90deg); }
 .rounded { border-radius: var(--r); }
 .rounded-lg { border-radius: var(--r-lg); }
 .divide-y > * + * { border-top: 1px solid var(--gray-100); }
+
+/* Inline SVG icon sizing (Heroicons) — keeps chrome icons crisp and tonally
+   consistent vs emoji glyphs. */
+.icon-sm { width: 14px; height: 14px; flex-shrink: 0; }
+.icon    { width: 16px; height: 16px; flex-shrink: 0; }
+.icon-lg { width: 20px; height: 20px; flex-shrink: 0; }
+.icon-xl { width: 28px; height: 28px; flex-shrink: 0; }
 .hide-mobile { }
 .hide-desktop { display: none; }
 @media (max-width: 760px) {

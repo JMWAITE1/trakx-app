@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="approve" data-version="V0.35">
+<body data-page="approve" data-version="V0.36">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -94,7 +94,7 @@ function render() {
   if (!rows.length) {
     $list.innerHTML = allRows.length
       ? '<div class="empty">No entries match the current filters.</div>'
-      : '<div class="empty"><div class="icon">✓</div>All caught up — no pending entries.</div>';
+      : '<div class="empty"><svg class="icon-xl" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--green)" fill="none" style="margin:0 auto 8px;display:block"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>All caught up — no pending entries.</div>';
     $count.textContent = allRows.length ? `0 of ${allRows.length}` : '0 pending';
     return;
   }

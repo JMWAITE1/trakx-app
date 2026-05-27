@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="ap" data-version="V0.35">
+<body data-page="ap" data-version="V0.36">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -78,7 +78,7 @@ function filtered() {
 function render() {
   const rows = filtered();
   if (error) { $.innerHTML = '<div class="empty">Error: ' + error.message + '</div>'; $g.innerHTML=''; return; }
-  if (!rows.length) { $.innerHTML = '<div class="empty"><div class="icon">📭</div>No entries match the current filters.</div>'; $g.innerHTML=''; return; }
+  if (!rows.length) { $.innerHTML = '<div class="empty"><svg class="icon-xl" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" style="opacity:0.4;margin:0 auto 8px;display:block"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H6.911a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661Z"/></svg>No entries match the current filters.</div>'; $g.innerHTML=''; return; }
   const groups = {};
   for (const r of rows) (groups[r.company_name] ||= []).push(r);
   let grandTotal = 0;
@@ -88,7 +88,7 @@ function render() {
     grandTotal += total;
     return `
       <details class="card" style="padding:0;overflow:hidden">
-        <summary style="padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:15px; background:var(--navy); color:#fff; letter-spacing:0.2px">
+        <summary style="padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:14px; background:var(--navy); color:#fff; letter-spacing:-0.005em">
           <span style="display:flex;align-items:center;gap:8px">
             <span class="chevron">▶</span>
             ${company}

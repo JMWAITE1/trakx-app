@@ -34,7 +34,9 @@
           <a class="trakx-nav-link ${l.id === page ? 'current' : ''}" href="${l.href}">${l.label}</a>
         `).join('')}
       </nav>
-      <button class="trakx-mobile-toggle" aria-label="menu" id="trakx-mobile-toggle">☰</button>
+      <button class="trakx-mobile-toggle" aria-label="menu" id="trakx-mobile-toggle">
+        <svg class="icon-lg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
       <span class="trakx-version">${version}</span>
     `;
     body.insertBefore(header, body.firstChild);
