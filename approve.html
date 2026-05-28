@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/trakx.css">
 </head>
-<body data-page="approve" data-version="V0.40">
+<body data-page="approve" data-version="V0.41">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -43,8 +43,10 @@
   <div id="list" class="flex" style="flex-direction:column;gap:14px"></div>
 </main>
 
+<script src="assets/trakx-auth.js"></script>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+await window.__trakxReady;
 const SUPABASE_URL = 'https://uhodycdbkwocvptiffks.supabase.co';
 const sb = createClient(SUPABASE_URL, 'sb_publishable_TKWfAttrdywsm1BOMUMNlw_FjMolZO5');
 
