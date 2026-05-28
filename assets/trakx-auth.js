@@ -8,15 +8,16 @@
   const APP_CODE    = 'trakx';
   const SESSION_KEY = 'ngl-am-auth';
 
-  // Hide body immediately so page content never flashes before auth completes.
-  var bodyHide = document.createElement('style');
-  bodyHide.id = 'trakx-body-hide';
-  bodyHide.textContent = 'body{display:none!important}';
-  document.head.appendChild(bodyHide);
+  // Inject a white cover on <html> immediately — before body is parsed, so
+  // page content never flashes. The login overlay (z-index:9999) sits on top.
+  var cover = document.createElement('div');
+  cover.id = 'trakx-cover';
+  cover.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9997';
+  document.documentElement.appendChild(cover);
 
   function showBody() {
-    var s = document.getElementById('trakx-body-hide');
-    if (s) s.remove();
+    var c = document.getElementById('trakx-cover');
+    if (c) c.remove();
   }
 
   let __resolveReady;
