@@ -66,6 +66,7 @@ Deno.serve(async (req) => {
           'rest_break_minutes_per', 'rest_break_count', 'rest_break_paid',
           'day_start_hour', 'day_end_hour',
           'zone_alert_within_pct',
+          'smartform_show_hours', 'smartform_show_materials', 'smartform_show_accom',
         ]) if (p[k] !== undefined) fields[k] = p[k];
         fields.updated_at = new Date().toISOString();
         const { error } = await db.from('projectx_project_rates').update(fields).eq('project_id', p.project_id);

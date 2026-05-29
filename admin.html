@@ -116,7 +116,7 @@
   .row-add-btn:hover { background: var(--gray-200); color: var(--navy); }
 </style>
 </head>
-<body data-page="admin" data-version="V1.17">
+<body data-page="admin" data-version="V1.18">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -157,6 +157,20 @@
 
         <div class="rates-section-label" title="Dashboard shows a banner when a zone gets close to its revenue target">Alerts</div>
         <div class="field-cell" style="grid-column:1/-1"><div class="field-cell-label" title="e.g. 10 means warn when a zone has used 90%+ of its revenue target">Warn when zone is within X% of target</div><input id="zone_alert" type="number" min="0" max="100" step="1" class="field num"></div>
+
+        <div class="rates-section-label" title="Which tabs appear on the subbie smartform">Smartform tabs</div>
+        <label class="field-cell" style="grid-column:1/-1; flex-direction:row; align-items:center; gap:8px; cursor:pointer">
+          <input id="sf_hours" type="checkbox" style="width:16px;height:16px;margin:0">
+          <span style="font-size:13px">Show Hours tab</span>
+        </label>
+        <label class="field-cell" style="grid-column:1/-1; flex-direction:row; align-items:center; gap:8px; cursor:pointer">
+          <input id="sf_materials" type="checkbox" style="width:16px;height:16px;margin:0">
+          <span style="font-size:13px">Show Materials tab</span>
+        </label>
+        <label class="field-cell" style="grid-column:1/-1; flex-direction:row; align-items:center; gap:8px; cursor:pointer">
+          <input id="sf_accom" type="checkbox" style="width:16px;height:16px;margin:0">
+          <span style="font-size:13px">Show Accom &amp; Travel tab</span>
+        </label>
 
         <div style="grid-column:1/-1" class="flex items-center gap-2 mt-3">
           <span id="rates-msg" class="text-xs text-muted">Changes save automatically</span>
@@ -258,6 +272,9 @@ async function loadAll() {
     document.getElementById('lunch_min').value    = pr.lunch_break_minutes;
     document.getElementById('lunch_thresh').value = pr.lunch_break_threshold_hours;
     document.getElementById('zone_alert').value   = pr.zone_alert_within_pct ?? 10;
+    document.getElementById('sf_hours').checked     = pr.smartform_show_hours     !== false;
+    document.getElementById('sf_materials').checked = pr.smartform_show_materials !== false;
+    document.getElementById('sf_accom').checked     = pr.smartform_show_accom     !== false;
   }
 
   const { data: zoneData, error: zErr } = await sb.from('projectx_zones').select('*').eq('project_id', projectId).order('display_order');
@@ -308,6 +325,9 @@ async function saveRates() {
       lunch_break_minutes:        parseInt(document.getElementById('lunch_min').value, 10) || 0,
       lunch_break_threshold_hours:parseFloat(document.getElementById('lunch_thresh').value) || 0,
       zone_alert_within_pct:      parseFloat(document.getElementById('zone_alert').value) || 0,
+      smartform_show_hours:       document.getElementById('sf_hours').checked,
+      smartform_show_materials:   document.getElementById('sf_materials').checked,
+      smartform_show_accom:       document.getElementById('sf_accom').checked,
     });
     msg.textContent = '✓ Saved'; msg.className = 'text-xs text-green';
     setTimeout(() => {

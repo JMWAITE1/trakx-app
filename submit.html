@@ -52,7 +52,7 @@
   }
 </style>
 </head>
-<body data-page="submit" data-version="V1.17">
+<body data-page="submit" data-version="V1.18">
 <script src="assets/nav.js" defer></script>
 
 <main class="container-narrow">
@@ -197,6 +197,29 @@ async function load() {
   document.getElementById('project-name').textContent = project.display_name;
   const ctx = document.querySelector('.projectx-context');
   if (ctx) ctx.textContent = project.display_name;
+
+  // Smartform tab visibility — admin can hide tabs they don't want subbies seeing.
+  // If all three end up hidden, force Hours back on so the form is still usable.
+  const { data: prRows } = await sb
+    .from('projectx_project_rates')
+    .select('smartform_show_hours, smartform_show_materials, smartform_show_accom')
+    .eq('project_id', project.id).limit(1);
+  const pr = (prRows && prRows[0]) || {};
+  let showH = pr.smartform_show_hours     !== false;
+  let showM = pr.smartform_show_materials !== false;
+  let showA = pr.smartform_show_accom     !== false;
+  if (!showH && !showM && !showA) showH = true;
+  const visibility = { hours: showH, materials: showM, accom: showA };
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.style.display = visibility[btn.dataset.tab] ? '' : 'none';
+  });
+  // Pick the first visible tab as the default
+  const firstVisible = ['hours','materials','accom'].find(t => visibility[t]) || 'hours';
+  currentTab = firstVisible;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === firstVisible));
+  document.querySelectorAll('.tab-fields').forEach(div => {
+    div.hidden = div.dataset.fields !== firstVisible;
+  });
 
   const { data: zones } = await sb
     .from('projectx_zones')
