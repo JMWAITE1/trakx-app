@@ -56,10 +56,51 @@
     border-bottom: 1px solid var(--line);
   }
   .rates-section-label:first-child { margin-top: 0; }
-  /* Tooltips: subtle dotted underline on label text + help cursor so the
-     user knows there's extra info on hover. */
-  .rates-section-label[title] { cursor: help; }
-  .rates-grid .field-cell-label[title] { cursor: help; border-bottom: 1px dotted var(--gray-300); display: inline-block; padding-bottom: 1px; }
+  /* CSS tooltip for rates form labels — pulls from title attribute so it
+     appears instantly (browser native title tooltips have a 1–2s delay
+     and are easy to miss). Limited to rate labels only so it doesn't
+     leak onto every titled element. */
+  .rates-section-label[title],
+  .rates-grid .field-cell-label[title] {
+    cursor: help;
+    position: relative;
+  }
+  .rates-grid .field-cell-label[title] {
+    border-bottom: 1px dotted var(--gray-300);
+    display: inline-block;
+    padding-bottom: 1px;
+  }
+  .rates-section-label[title]:hover::after,
+  .rates-grid .field-cell-label[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    z-index: 100;
+    background: var(--navy);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    text-transform: none;
+    letter-spacing: 0;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    pointer-events: none;
+  }
+  .rates-section-label[title]:hover::before,
+  .rates-grid .field-cell-label[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 16px;
+    z-index: 101;
+    border: 5px solid transparent;
+    border-top-color: var(--navy);
+    pointer-events: none;
+  }
 
   .compact-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .compact-table th { background: var(--gray-50); padding: 4px 6px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -75,7 +116,7 @@
   .row-add-btn:hover { background: var(--gray-200); color: var(--navy); }
 </style>
 </head>
-<body data-page="admin" data-version="V1.07">
+<body data-page="admin" data-version="V1.08">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
