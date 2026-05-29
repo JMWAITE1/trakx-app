@@ -14,7 +14,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/projectx.css">
 </head>
-<body data-page="submit" data-version="V1.04">
+<body data-page="submit" data-version="V1.05">
 <script src="assets/nav.js" defer></script>
 
 <main class="container-narrow">
@@ -141,15 +141,28 @@ document.querySelectorAll('.tab').forEach(btn => {
 async function load() {
   document.getElementById('date').valueAsDate = new Date();
 
-  const { data: projects, error: pErr } = await sb
+  // Try the slug from the URL first. If it doesn't match, fall back to the
+  // first active project (since we only run one project at a time today).
+  let { data: projects, error: pErr } = await sb
     .from('projectx_projects')
-    .select('id, display_name, customer_name')
+    .select('id, display_name, customer_name, status')
     .eq('slug', slug)
     .limit(1);
-  const project = projects && projects[0];
-  if (pErr || !project) {
-    document.getElementById('project-name').textContent = 'Project not found';
-    document.getElementById('project-sub').textContent  = pErr?.message || 'Check the link.';
+  if (pErr) console.error('project lookup by slug failed', pErr);
+  let project = projects && projects[0];
+  if (!project) {
+    console.warn(`No project with slug="${slug}" — falling back to first active project`);
+    const fallback = await sb
+      .from('projectx_projects')
+      .select('id, display_name, customer_name, status')
+      .eq('status', 'active')
+      .limit(1);
+    if (fallback.error) console.error('fallback project lookup failed', fallback.error);
+    project = fallback.data && fallback.data[0];
+  }
+  if (!project) {
+    document.getElementById('project-name').textContent = 'No active project';
+    document.getElementById('project-sub').textContent  = 'Ask Johnny to create one in Admin.';
     document.getElementById('submit-btn').disabled = true;
     return;
   }
