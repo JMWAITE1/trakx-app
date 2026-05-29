@@ -22,7 +22,7 @@
   .ar-table.hide-materials .col-materials { display: none; }
 </style>
 </head>
-<body data-page="ar" data-version="V1.14">
+<body data-page="ar" data-version="V1.15">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -31,7 +31,8 @@
     <div class="flex items-center gap-2" style="flex-shrink:0; position:relative">
       <button id="toggle-all" class="btn btn-secondary btn-sm">Expand all</button>
       <button id="cols-btn" class="btn btn-secondary btn-sm">Columns ▾</button>
-      <div id="cols-menu" hidden style="position:absolute;top:calc(100% + 4px);right:0;z-index:50;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:8px 10px;min-width:160px;display:flex;flex-direction:column;gap:6px;font-size:13px">
+      <div id="cols-menu" hidden style="position:absolute;top:calc(100% + 4px);right:0;z-index:50;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:10px 12px;min-width:200px;display:flex;flex-direction:column;gap:6px;font-size:13px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)">Show columns</div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="company"> Company</label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="type"> Type</label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="labour"> Labour</label>
