@@ -107,7 +107,7 @@
   .zone-table .actual-cell.over { color: var(--red); }
 </style>
 </head>
-<body data-page="dashboard" data-version="V1.19">
+<body data-page="dashboard" data-version="V1.20">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -401,7 +401,7 @@ new Chart(document.getElementById('chart-total').getContext('2d'), {
 
 // Copy subbie link button
 document.getElementById('copy-subbie-link').addEventListener('click', async () => {
-  const url = location.origin + location.pathname.replace(/[^/]*$/, '') + 'submit.html?p=fonterra-m26';
+  const url = new URL('submit.html?p=fonterra-m26', document.baseURI).href;
   const hint = document.getElementById('submit-hint');
   try {
     await navigator.clipboard.writeText(url);
