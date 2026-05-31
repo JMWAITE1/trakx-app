@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <script>if(location.hostname!=='apps.nationalgroupltd.com'){location.replace('https://apps.nationalgroupltd.com/projectx'+location.pathname+location.search);}</script>
 <base href="/projectx/">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ProjectX — Accounts Receivable</title>
+<title>ProjectX � Accounts Receivable</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1e3a5f">
 <meta name="mobile-web-app-capable" content="yes">
@@ -29,7 +29,7 @@
   }
 </style>
 </head>
-<body data-page="ar" data-version="V1.21">
+<body data-page="ar" data-version="V1.22">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -37,7 +37,7 @@
     <h1>Accounts Receivable</h1>
     <div class="flex items-center gap-2 page-actions" style="position:relative">
       <button id="toggle-all" class="btn btn-secondary btn-sm">Expand all</button>
-      <button id="cols-btn" class="btn btn-secondary btn-sm">Columns ▾</button>
+      <button id="cols-btn" class="btn btn-secondary btn-sm">Columns ?</button>
       <div id="cols-menu" hidden style="position:absolute;top:calc(100% + 4px);right:0;z-index:50;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:10px 12px;min-width:200px;flex-direction:column;gap:6px;font-size:13px">
         <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)">Show columns</div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="company"> Company</label>
@@ -48,7 +48,7 @@
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="materials"> Materials</label>
       </div>
       <button id="export-csv" class="btn btn-secondary btn-sm">Export CSV</button>
-      <a href="index.html" class="btn btn-ghost btn-sm">← Back</a>
+      <a href="index.html" class="btn btn-ghost btn-sm">? Back</a>
     </div>
   </div>
   <div class="card card-tight mb-3" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
@@ -124,9 +124,9 @@ function render() {
       <details class="card" style="padding:0;overflow:hidden">
         <summary style="padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:14px; background:var(--navy); color:#fff; letter-spacing:-0.005em">
           <span style="display:flex;align-items:center;gap:8px">
-            <span class="chevron">▶</span>
+            <span class="chevron">?</span>
             ${zone}
-            <span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.7)">${rows.length} lines${totalHrs > 0 ? ` · ${Math.round(totalHrs)}h` : ''}</span>
+            <span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.7)">${rows.length} lines${totalHrs > 0 ? ` � ${Math.round(totalHrs)}h` : ''}</span>
           </span>
           <span style="font-variant-numeric:tabular-nums">${fmt(total)}</span>
         </summary>
@@ -189,7 +189,7 @@ document.getElementById('f-clear').addEventListener('click', () => {
   render();
 });
 
-// ── Column picker ──────────────────────────────────────────────────
+// -- Column picker --------------------------------------------------
 const COLS_KEY = 'projectx-ar-cols';
 const HIDEABLE = ['company','type','labour','travel','accom','materials'];
 function loadCols() { try { return JSON.parse(localStorage.getItem(COLS_KEY) || '{}'); } catch { return {}; } }
