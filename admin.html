@@ -132,7 +132,7 @@
   }
 </style>
 </head>
-<body data-page="admin" data-version="V1.23">
+<body data-page="admin" data-version="V1.24">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
@@ -425,7 +425,7 @@ function renderCompanies() {
       <tbody>
         ${companies.map(c => `
           <tr data-id="${c.id}">
-            <td><input class="field" value="${c.name}" data-f="name" style="min-width:160px"></td>
+            <td style="width:100%"><input class="field" value="${c.name}" data-f="name"></td>
             <td class="text-center"><label class="check"><input type="checkbox" ${c.is_internal ? 'checked' : ''} data-f="is_internal"></label></td>
             <td><button class="btn btn-primary" data-act="save">Save</button></td>
           </tr>
