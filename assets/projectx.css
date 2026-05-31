@@ -5,6 +5,7 @@
   /* Pro-look palette: muted slate/forest/brick/mustard tones for an
      industrial-software feel (Linear / Procore / Foresite), not bright
      marketing colours. Navy stays — it's our identity. */
+  scroll-padding-top: 56px; /* clearance for the sticky header (~46px) */
   --navy:#1e3a5f; --navy-h:#16304f;
   --blue:#2c5282; --blue-h:#22467a;     /* desaturated slate, not bright */
   --accent:#2c5282;
