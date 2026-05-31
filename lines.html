@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <script>if(location.hostname!=='apps.nationalgroupltd.com'){location.replace('https://apps.nationalgroupltd.com/projectx'+location.pathname+location.search);}</script>
 <base href="/projectx/">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ProjectX — Lines</title>
+<title>ProjectX ï¿½ Lines</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1e3a5f">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,7 +16,7 @@
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
 <link rel="stylesheet" href="assets/projectx.css">
 <style>
-  /* This page is the canonical "where I can see EVERYTHING" view —
+  /* This page is the canonical "where I can see EVERYTHING" view ï¿½
      every entry, every input, every calculated field. Equivalent of
      Smartsheet "01. Summary Database". Nothing hidden, nothing
      bundled behind a single $ figure. */
@@ -31,7 +31,7 @@
      the wrapper div's overflow-x kicks in instead of the page. */
   .lines-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 12px; }
   /* Belt-and-braces: never let the body itself scroll horizontally
-     because of this page — keep all overflow inside the card. */
+     because of this page ï¿½ keep all overflow inside the card. */
   html, body { max-width: 100%; overflow-x: hidden; }
   .lines-table thead th {
     background: var(--navy); color: white;
@@ -50,7 +50,7 @@
     white-space: nowrap;
   }
   .lines-table tbody td.wrap { white-space: normal; max-width: 220px; }
-  /* Alternating shade BY DATE — every row on the same day shares a
+  /* Alternating shade BY DATE ï¿½ every row on the same day shares a
      background so the eye can group them visually. */
   .lines-table tbody tr.dg-a td { background: #e3ebf5; }
   .lines-table tbody tr.dg-b td { background: white; }
@@ -63,7 +63,7 @@
   .lines-table .approved { color: var(--green); font-weight: 600; }
   .lines-table .pending  { color: var(--amber); font-weight: 600; }
 
-  /* Contextual column visibility — when the user filters by a specific
+  /* Contextual column visibility ï¿½ when the user filters by a specific
      type (Hours / Materials / Accom), hide columns that aren't relevant. */
   body[data-type-filter="hours"]     .col-mat,
   body[data-type-filter="materials"] .col-hours,
@@ -134,7 +134,7 @@
     <button id="f-clear" class="btn btn-ghost btn-sm">Clear filters</button>
   </div>
 
-  <div class="stats-bar mb-3" id="stats">Loading…</div>
+  <div class="stats-bar mb-3" id="stats">Loadingï¿½</div>
 
   <div class="card card-tight" style="padding:0;overflow:hidden">
     <div style="overflow-x:auto;width:100%">
@@ -164,7 +164,7 @@
         </tr>
       </thead>
       <tbody id="lines-tbody">
-        <tr><td colspan="20" class="text-muted italic" style="text-align:center;padding:20px">Loading…</td></tr>
+        <tr><td colspan="20" class="text-muted italic" style="text-align:center;padding:20px">Loadingï¿½</td></tr>
       </tbody>
     </table>
     </div>
@@ -185,9 +185,9 @@ const numh = h => h == null ? '' : (+h).toFixed(2);
 
 let allLines = [];
 let allRates = {};        // project rates for showing formula values
-let allZones = [];        // {id, name} — for edit form dropdowns
-let allPeople = [];       // {id, name} — for edit form dropdowns
-let auditByEntry = {};    // entry_id ? [{action, actor, actor_source, created_at, changed_fields}, …]
+let allZones = [];        // {id, name} ï¿½ for edit form dropdowns
+let allPeople = [];       // {id, name} ï¿½ for edit form dropdowns
+let auditByEntry = {};    // entry_id ? [{action, actor, actor_source, created_at, changed_fields}, ï¿½]
 let sortKey  = 'date';
 let sortDir  = 'desc';
 
@@ -221,7 +221,7 @@ async function load() {
   }
   allLines = data || [];
 
-  // Pull audit history for entries — used in the expanded calc panel to
+  // Pull audit history for entries ï¿½ used in the expanded calc panel to
   // show who did what & when (submit / approve / edit / delete).
   const { data: auditRows } = await sb
     .from('projectx_audit_log')
@@ -293,7 +293,7 @@ function sortRows(rows) {
 }
 
 function render() {
-  // Drive contextual column visibility off the type filter — CSS does
+  // Drive contextual column visibility off the type filter ï¿½ CSS does
   // the actual hiding via body[data-type-filter="..."] selectors.
   document.body.dataset.typeFilter = $('f-type').value || '';
 
@@ -403,7 +403,7 @@ function renderCalcDetail(r) {
       ${r.type === 'hours' ? `
         <div class="calc-line"><span>Start time</span><span>${r.start_time || ''}</span></div>
         <div class="calc-line"><span>Finish time</span><span>${r.finish_time || ''}${r.finish_next_day ? ' (next day)' : ''}</span></div>
-        <div class="calc-line"><span>Work description</span><span>${r.work_description || '—'}</span></div>
+        <div class="calc-line"><span>Work description</span><span>${r.work_description || 'ï¿½'}</span></div>
       ` : ''}
       ${r.type === 'materials' ? `
         <div class="calc-line"><span>Materials</span><span>${r.materials_description || ''}</span></div>
@@ -473,7 +473,7 @@ function renderCalcDetail(r) {
     blocks.push(`
       <h3>Materials sell</h3>
       <div class="calc-block">
-        <div class="calc-formula">sell = cost &times; (1 + markup% / 100) — current markup ${allRates.materials_markup_pct ?? '0'}%</div>
+        <div class="calc-formula">sell = cost &times; (1 + markup% / 100) ï¿½ current markup ${allRates.materials_markup_pct ?? '0'}%</div>
         <div class="calc-line"><span>Material cost</span><span>${fmt(r.materials_cost_cents || 0)}</span></div>
         <div class="calc-line"><span>Material sell</span><span>${fmt(r.materials_sell_cents || 0)}</span></div>
       </div>
@@ -484,17 +484,17 @@ function renderCalcDetail(r) {
   blocks.push(`
     <h3>Totals (with internal-staff rule)</h3>
     <div class="calc-block">
-      ${r.is_internal ? `<div class="calc-formula" style="color:var(--amber)">Internal staff (${r.company_name}) — 100% CM applied (internal staff cost is overhead, not project P&amp;L).</div>` : ''}
+      ${r.is_internal ? `<div class="calc-formula" style="color:var(--amber)">Internal staff (${r.company_name}) ï¿½ 100% CM applied (internal staff cost is overhead, not project P&amp;L).</div>` : ''}
       <div class="calc-line"><span>Total cost</span><span>${fmt(r.total_cost_cents)}</span></div>
       <div class="calc-line"><span>Sell price</span><span>${fmt(r.sell_price_cents)}</span></div>
       <div class="calc-line total"><span>Profit (sell - cost)</span><span>${fmtP(r.profit_cents)}</span></div>
-      <div class="calc-line"><span>CM %</span><span>${r.sell_price_cents > 0 ? ((100 * r.profit_cents / r.sell_price_cents).toFixed(1) + '%') : '—'}</span></div>
+      <div class="calc-line"><span>CM %</span><span>${r.sell_price_cents > 0 ? ((100 * r.profit_cents / r.sell_price_cents).toFixed(1) + '%') : 'ï¿½'}</span></div>
     </div>
 
     <h3>Approval &amp; audit</h3>
     <div class="calc-block">
-      <div class="calc-line"><span>Approved</span><span>${r.approved ? '? by ' + (r.approved_by || '?') + ' on ' + (r.approved_at ? r.approved_at.slice(0,10) : '?') : '— pending'}</span></div>
-      <div class="calc-line"><span>Marked paid</span><span>${r.marked_paid ? '?' : '— payment tracked in NetSuite'}</span></div>
+      <div class="calc-line"><span>Approved</span><span>${r.approved ? '? by ' + (r.approved_by || '?') + ' on ' + (r.approved_at ? r.approved_at.slice(0,10) : '?') : 'ï¿½ pending'}</span></div>
+      <div class="calc-line"><span>Marked paid</span><span>${r.marked_paid ? '?' : 'ï¿½ payment tracked in NetSuite'}</span></div>
       <div class="calc-line"><span>Entry id</span><span style="font-family:monospace">${r.id}</span></div>
     </div>
 
@@ -579,7 +579,7 @@ $('export-csv').addEventListener('click', () => {
 
 // -- Edit + Delete an entry -----------------------------------------
 function buildTimeOptionsHtml(selected) {
-  const opts = ['<option value="">—</option>'];
+  const opts = ['<option value="">ï¿½</option>'];
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m += 15) {
       const v = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
@@ -656,7 +656,7 @@ window.cancelEdit = function (id) {
 
 window.saveEdit = async function (id) {
   const msg = document.getElementById(`e-msg-${id}`);
-  msg.textContent = 'Saving…'; msg.className = 'text-xs text-muted mt-2';
+  msg.textContent = 'Savingï¿½'; msg.className = 'text-xs text-muted mt-2';
   const startT  = document.getElementById(`e-start-${id}`).value;
   const finishT = document.getElementById(`e-finish-${id}`).value;
   const payload = {
@@ -688,7 +688,7 @@ window.saveEdit = async function (id) {
     });
     const body = await r.json();
     if (!body.ok) throw new Error(body.error || `HTTP ${r.status}`);
-    msg.textContent = '? Saved — reloading';
+    msg.textContent = '? Saved ï¿½ reloading';
     await load();
     render();
   } catch (e) {
