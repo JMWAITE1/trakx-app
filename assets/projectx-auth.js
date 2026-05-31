@@ -54,7 +54,7 @@
     try {
       var r = await fetch(
         SUPABASE_URL + '/rest/v1/app_access?select=active&user_id=eq.' + userId
-        + '&app_code=eq.' + APP_CODE + '&active=eq.true&limit=1',
+        + '&app_code=eq.' + APP_CODE + '&active=eq.true&user_type=eq.staff&limit=1',
         { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token } }
       );
       var data = await r.json();
