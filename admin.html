@@ -116,9 +116,25 @@
 
   .row-add-btn { background: var(--gray-100); color: var(--gray-700); border: 1px dashed var(--gray-300); border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; }
   .row-add-btn:hover { background: var(--gray-200); color: var(--navy); }
+
+  @media (max-width: 600px) {
+    /* Larger tap targets in compact tables */
+    .compact-table td { padding: 6px 5px; }
+    .compact-table input.field, .compact-table select.field {
+      min-height: 36px; padding: 5px 8px; font-size: 13px;
+    }
+    .compact-table .btn { min-height: 36px; padding: 5px 10px; font-size: 12px; }
+    /* Tables expand to natural width; overflow-x:auto on wrapper handles scrolling */
+    .compact-table { width: max-content; min-width: 100%; }
+    /* Expand table wrappers to card edges for more horizontal scroll room */
+    #zones-rows, #people-rows, #companies-rows {
+      margin: 0 -14px -12px;
+      padding-bottom: 4px;
+    }
+  }
 </style>
 </head>
-<body data-page="admin" data-version="V1.20">
+<body data-page="admin" data-version="V1.21">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">

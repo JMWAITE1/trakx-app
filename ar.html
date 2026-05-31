@@ -22,18 +22,23 @@
   .ar-table.hide-travel .col-travel,
   .ar-table.hide-accom .col-accom,
   .ar-table.hide-materials .col-materials { display: none; }
+  #cols-menu:not([hidden]) { display: flex; }
+  @media (max-width: 600px) {
+    .page-toolbar { flex-wrap: wrap; }
+    #cols-menu { left: 0 !important; right: auto !important; }
+  }
 </style>
 </head>
-<body data-page="ar" data-version="V1.20">
+<body data-page="ar" data-version="V1.21">
 <script src="assets/nav.js" defer></script>
 
 <main class="container">
-  <div class="flex items-baseline justify-between mb-2 gap-3">
+  <div class="flex items-baseline justify-between mb-2 gap-3 page-toolbar">
     <h1>Accounts Receivable</h1>
-    <div class="flex items-center gap-2" style="flex-shrink:0; position:relative">
+    <div class="flex items-center gap-2 page-actions" style="position:relative">
       <button id="toggle-all" class="btn btn-secondary btn-sm">Expand all</button>
       <button id="cols-btn" class="btn btn-secondary btn-sm">Columns ▾</button>
-      <div id="cols-menu" hidden style="position:absolute;top:calc(100% + 4px);right:0;z-index:50;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:10px 12px;min-width:200px;display:flex;flex-direction:column;gap:6px;font-size:13px">
+      <div id="cols-menu" hidden style="position:absolute;top:calc(100% + 4px);right:0;z-index:50;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:10px 12px;min-width:200px;flex-direction:column;gap:6px;font-size:13px">
         <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)">Show columns</div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="company"> Company</label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" data-col="type"> Type</label>
